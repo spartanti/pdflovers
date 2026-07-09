@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 
 const PUB = path.join(path.dirname(fileURLToPath(import.meta.url)), 'public');
-const SITE = process.env.SITE_URL || 'https://pdflovers.up.railway.app';
+const SITE = process.env.SITE_URL || 'https://pdflovers-production.up.railway.app';
 const YEAR = new Date().getFullYear();
 
 // ----------------------------------------------------------------------------

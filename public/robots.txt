@@ -17,4 +17,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://pdflovers.up.railway.app/sitemap.xml
+Sitemap: https://pdflovers-production.up.railway.app/sitemap.xml

@@ -4,7 +4,7 @@
  */
 window.PDFLOVERS_CONFIG = {
   // Endereço público do site (usado em canonical/sitemap). Troque após publicar.
-  SITE_URL: 'https://pdflovers.up.railway.app',
+  SITE_URL: 'https://pdflovers-production.up.railway.app',
 
   // Google Analytics 4 — cole seu ID "G-XXXXXXXXXX" para ativar.
   GA_ID: '',
