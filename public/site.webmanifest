@@ -1,0 +1,17 @@
+{
+  "name": "PdfLovers",
+  "short_name": "PdfLovers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#e11d48",
+  "lang": "pt-BR",
+  "description": "Ferramentas PDF grátis e privadas, no seu navegador.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
