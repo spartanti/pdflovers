@@ -68,11 +68,13 @@ function loadFile(filePath) {
 }
 
 function cacheControl(ext, pathname) {
-  // Bibliotecas vendorizadas e assets versionados: cache longo e imutável.
+  // Bibliotecas vendorizadas nunca mudam de conteúdo → cache imutável (1 ano).
   if (pathname.startsWith('/vendor/')) return 'public, max-age=31536000, immutable';
-  if (['.css', '.js', '.mjs', '.woff2', '.woff', '.wasm', '.svg', '.png', '.jpg', '.webp', '.ico'].includes(ext)) {
-    return 'public, max-age=86400'; // 1 dia
-  }
+  if (['.woff2', '.woff', '.wasm'].includes(ext)) return 'public, max-age=31536000, immutable';
+  // CSS/JS do app podem mudar a cada deploy → revalida via ETag (304 é minúsculo).
+  if (['.css', '.js', '.mjs', '.webmanifest'].includes(ext)) return 'no-cache';
+  // Imagens/ícones: cache curto.
+  if (['.svg', '.png', '.jpg', '.jpeg', '.webp', '.ico'].includes(ext)) return 'public, max-age=3600';
   return 'no-cache'; // HTML sempre revalida
 }
 
