@@ -127,10 +127,12 @@ a:hover { text-decoration: underline; }
 
 /* Dropzone */
 .dropzone {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   border: 2px dashed color-mix(in srgb, var(--brand) 45%, var(--border));
   border-radius: 14px; padding: 44px 20px; text-align: center; cursor: pointer;
   background: var(--surface-2); transition: background .12s, border-color .12s;
 }
+.dropzone .dz-ic, .dropzone strong, .dropzone span { width: 100%; }
 .dropzone:hover, .dropzone.drag {
   border-color: var(--brand);
   background: color-mix(in srgb, var(--brand) 8%, var(--surface-2));
