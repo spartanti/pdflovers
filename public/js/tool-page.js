@@ -53,6 +53,7 @@ async function init() {
   }
 
   setupDropzone();
+  setupReorder();
   renderOptions();
   updateRunButton();
 }
@@ -137,31 +138,53 @@ function renderFileList() {
     li.querySelector('.fi-x').addEventListener('click', () => removeFile(i));
 
     if (tool.reorder) {
+      li._origIdx = i; // índice de origem em TODOS os itens (para reordenar)
       li.draggable = true;
-      li.addEventListener('dragstart', () => { li.classList.add('dragging'); li._idx = i; });
+      li.addEventListener('dragstart', (e) => {
+        li.classList.add('dragging');
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+      });
       li.addEventListener('dragend', () => li.classList.remove('dragging'));
     }
     list.appendChild(li);
   });
-
-  if (tool.reorder) enableReorder(list);
 }
 
-function enableReorder(list) {
+// Anexado UMA vez ao <ul> persistente. Distingue reordenação interna
+// de arquivo externo solto sobre a lista (que deve ser ADICIONADO, não corromper).
+function setupReorder() {
+  if (!tool.reorder) return;
+  const list = document.getElementById('file-list');
+
   list.addEventListener('dragover', (e) => {
-    e.preventDefault();
     const dragging = list.querySelector('.dragging');
-    if (!dragging) return;
-    const after = getDragAfter(list, e.clientY);
-    if (after == null) list.appendChild(dragging);
-    else list.insertBefore(dragging, after);
+    if (dragging) {
+      e.preventDefault();
+      const after = getDragAfter(list, e.clientY);
+      if (after == null) list.appendChild(dragging);
+      else list.insertBefore(dragging, after);
+    } else if (isFileDrag(e)) {
+      e.preventDefault(); // permite soltar arquivo externo sobre a lista
+    }
   });
-  list.addEventListener('drop', () => {
-    // Reconstrói a ordem de state.files a partir do DOM.
-    const order = [...list.querySelectorAll('.file-item')].map((el) => el._idx);
-    state.files = order.map((idx) => state.files[idx]);
-    renderFileList();
+
+  list.addEventListener('drop', (e) => {
+    const dragging = list.querySelector('.dragging');
+    if (dragging) {
+      e.preventDefault();
+      const order = [...list.querySelectorAll('.file-item')].map((el) => el._origIdx);
+      state.files = order.map((idx) => state.files[idx]).filter(Boolean);
+      renderFileList();
+    } else if (e.dataTransfer?.files?.length) {
+      e.preventDefault();
+      addFiles([...e.dataTransfer.files]); // arquivo externo → adiciona
+    }
   });
+}
+
+function isFileDrag(e) {
+  const t = e.dataTransfer?.types;
+  return t && (t.includes ? t.includes('Files') : [...t].includes('Files'));
 }
 
 function getDragAfter(list, y) {
